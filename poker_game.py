@@ -34,38 +34,40 @@ class PokerGame:
         print(self.playerandcards)
    
     def winninghand(self):
-        self.maxname = []
-        for key, value in self.playerandcards.items():
-            if "AH" in value or "AD" in value or "AC" in value or "AS" in value:
-                self.maxname.append(key)
-        print(self.maxname)
-        if not self.maxname:
-            for key, value in self.playerandcards.items():
-                if "KH" in value or "KD" in value or "KC" in value or "KS" in value:
-                    self.maxname.append(key)
-        elif not self.maxname:
-         for key, value in self.playerandcards.items():
-                if "QH" in value or "QD" in value or "QC" in value or "QS" in value:
-                    self.maxname.append(key)
-        if len(self.maxname) > 1:
-            count = 0
-            maxcount = 0
-            winner = ""
-            for key, value in self.playerandcards.items():
-                for card in value:
-                    x = card.count("A")
-                    y = card.count("K")
-                    if x > count:
-                        count == x
-                        if count > maxcount:
-                            maxcount == count
-                            winner += key
-                    elif y > count:
-                        count == y
-                        if count > maxcount:
-                            maxcount == count
-                            winner += key
-        print("The winner is " + winner)
+        winninghandvals = {}
+        stringtovals = {"2":2,"3":3,"4":4,"5":5,"6":6,"7":7,"8":8,"9":9,"10":10,"J":11,"Q":12,"K":13,"A":14}
+
+        for key,value in self.playerandcards.items():
+            winninghandvals[key] = []
+            for card in value:
+                letter = card[:-1]
+                winninghandvals[key].append(stringtovals[letter])
+        maxname = []
+        maxi = 0
+        for key,value in winninghandvals.items():
+            if max(value) > maxi:
+                maxi = max(value)
+                winninghandvals[key].remove(max(value))
+                maxname = [key]
+            elif max(value) == maxi:
+                winninghandvals[key].remove(max(value))
+                maxname.append(key)
+        while len(maxname) > 1:
+            alive = maxname
+            maxname = []
+            maxi = 0
+            for name in alive:
+                vlist = winninghandvals[name]
+                if max(vlist) > maxi:
+                    maxi = max(vlist)
+                    winninghandvals[name].remove(max(vlist))
+                    maxname = [name]
+                elif max(vlist) == maxi:
+                    winninghandvals[name].remove(max(vlist))
+                    maxname.append(name)
+        print("The winner is " + str(maxname))
+                 
+        #print("The winner is " + winner)
         #print("The winner is " + self.maxname[0])
                 
                 
